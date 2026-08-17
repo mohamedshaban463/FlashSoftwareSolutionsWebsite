@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flash Software Solutions — AI Agent project for Egyptian Tax Authority (ETA) e-Invoicing automation, featuring client-side PKCS#11 hardware token e-signatures and real-time analytics.">
+  <meta name="keywords" content="Flash Software Solutions, Egyptian Tax Authority, ETA e-invoicing, PKCS#11, e-signature, USB Token, E-Pass 2003, Egypt Trust, AI Tax Agent, invoice automation, PyQt6">
+  <meta name="author" content="Flash Software Solutions">
+  <title>Flash Software Solutions — ETA AI Tax Agent & e-Invoicing Automation</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Hero & Brand Header (No navbar) -->
+  <header class="hero-section hero-no-nav">
+    <div class="container">
+      
+      <!-- Company Brand Centerpiece -->
+      <div class="brand-hero-center">
+        <div class="company-logo-wrapper">
+          <img src="assets/images/logo.png" alt="Flash Software Solutions Logo" class="company-logo-img">
+        </div>
+        <div class="hero-badge-wrap">
+          <span class="hero-badge-dot"></span>
+          <span class="hero-badge-text">Egyptian Tax Authority (ETA) e-Invoicing Automation • PKCS#11 Hardware e-Sign</span>
+        </div>
+      </div>
+
+      <div class="hero-content-center">
+        <h1 class="hero-title">
+          <span class="company-name-highlight">Flash Software Solutions</span><br>
+          <span class="gradient-text">ETA AI Tax Agent & Client-Side e-Signature System</span>
+        </h1>
+
+        <p class="hero-description">
+          A high-performance client-side application designed to automate end-to-end e-invoicing workflows for the Egyptian Tax Authority (ETA). Seamlessly integrates invoice PDF extraction, AI schema normalization, local PKCS#11 hardware USB Token cryptographic signing (E-Pass 2003, SafeNet, IDEMIA), and automated API submissions with zero private-key exposure.
+        </p>
+
+        <!-- Real-Time Stats Row (Animated Counters) -->
+        <div class="hero-stats-row">
+          <div class="hero-stat-item">
+            <div class="hero-stat-value" data-counter-target="13127634.50" data-is-currency="true">EGP 13,127,634.50</div>
+            <div class="hero-stat-label">Total Net Revenue Processed</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value" data-counter-target="1837868.83" data-is-currency="true">EGP 1,837,868.83</div>
+            <div class="hero-stat-label">Statutory VAT Reconciled</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value" data-counter-target="65">65</div>
+            <div class="hero-stat-label">Audited Invoices</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value" data-counter-target="69.2" data-is-percent="true">69.2%</div>
+            <div class="hero-stat-label">ETA API Validity Ratio</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <!-- Interactive Application Views & Image Tour -->
+  <section class="section" id="showcase">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-pill">Application Interface Tour</div>
+        <h2 class="section-title">Client-Side Application Views</h2>
+        <p class="section-subtitle">
+          Explore the desktop interface engineered by <strong>Flash Software Solutions</strong> for handling client-side e-signatures, real-time analytics, and secure document dispatch to ETA's API. Click on the pulsing pins to inspect key components.
+        </p>
+      </div>
+
+      <!-- Showcase Tab Switcher -->
+      <div class="showcase-tabs-wrapper">
+        <div class="showcase-tabs">
+          <button class="showcase-tab-btn active" data-view="dashboard" id="tabDashboard">
+            <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="9"></rect>
+              <rect x="14" y="3" width="7" height="5"></rect>
+              <rect x="14" y="12" width="7" height="9"></rect>
+              <rect x="3" y="16" width="7" height="5"></rect>
+            </svg>
+            Analytics Dashboard
+          </button>
+          <button class="showcase-tab-btn" data-view="invoices" id="tabInvoices">
+            <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Invoice Explorer & Audit
+          </button>
+          <button class="showcase-tab-btn" data-view="submit" id="tabSubmit">
+            <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Submit & PKCS#11 Signing
+          </button>
+        </div>
+      </div>
+
+      <!-- Showcase Display Box -->
+      <div class="showcase-display">
+        <div class="showcase-header">
+          <div class="showcase-header-left">
+            <span class="showcase-tag" id="showcaseTag">Real-Time BI & Metrics</span>
+            <h3 class="showcase-title" id="showcaseTitle">Analytics & Executive Dashboard</h3>
+            <p class="showcase-subtitle" id="showcaseSubtitle">Real-time visibility into invoicing volumes, tax liabilities, validity rates, and customer distributions.</p>
+          </div>
+          <div class="showcase-controls">
+            <button class="btn btn-secondary btn-sm" id="btnToggleHotspots" title="Toggle Hotspot Pins">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              Toggle Annotations
+            </button>
+            <button class="btn btn-primary btn-sm" id="btnExpandLightbox" title="Enlarge Image">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+              Full Screen
+            </button>
+          </div>
+        </div>
+
+        <!-- Image with interactive hot-spot overlays -->
+        <div class="showcase-image-container">
+          <img src="assets/images/dashboard.png" alt="ETA Invoice Manager - Dashboard" class="showcase-main-img" id="showcaseMainImg">
+          <div class="hotspot-overlay" id="hotspotOverlay"></div>
+        </div>
+
+        <!-- Dynamic feature cards underneath -->
+        <div class="showcase-features-grid" id="showcaseFeaturesGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox Modal for Fullscreen Image Inspection -->
+  <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true">
+    <div class="lightbox-header">
+      <div class="lightbox-title-text" id="lightboxTitle">Analytics Dashboard</div>
+      <div class="lightbox-toolbar">
+        <button class="btn btn-secondary btn-sm" id="lightboxZoomIn" title="Zoom In (+)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+        </button>
+        <button class="btn btn-secondary btn-sm" id="lightboxZoomOut" title="Zoom Out (-)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+        </button>
+        <button class="btn btn-secondary btn-sm" id="lightboxZoomReset" title="Reset (0)">1:1</button>
+        <button class="btn btn-secondary btn-sm" id="lightboxClose" title="Close (Esc)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+    <div class="lightbox-body">
+      <div class="lightbox-img-wrapper">
+        <img src="" alt="" class="lightbox-img" id="lightboxImage">
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-centerpiece">
+        <div class="footer-logo-wrap">
+          <img src="assets/images/logo.png" alt="Flash Software Solutions" class="footer-logo-img">
+        </div>
+        <h3 class="footer-brand-title">Flash Software Solutions</h3>
+        <p class="footer-brand-desc">
+          Automating Egyptian Tax Authority (ETA) e-Invoicing compliance, PKCS#11 hardware cryptographic signing, and intelligent tax agent workflows.
+        </p>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 <strong>Flash Software Solutions</strong>. All Rights Reserved.</div>
+        <div style="font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-secondary);">
+          ETA API v1.0 Compliant • PKCS#11 Hardware e-Signature Certified
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js?v=2"></script>
+  <script src="js/lightbox.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>
