@@ -160,57 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.hotspot-pin').forEach(p => p.classList.remove('active'));
   });
 
-  // ── Animated Number Counters in Hero ──────────────────────────────
-  const countElements = document.querySelectorAll('[data-counter-target]');
-  let hasCounted = false;
-
-  function runCounters() {
-    if (hasCounted) return;
-    hasCounted = true;
-
-    countElements.forEach(el => {
-      const target = parseFloat(el.dataset.counterTarget);
-      const isCurrency = el.dataset.isCurrency === 'true';
-      const isPercent = el.dataset.isPercent === 'true';
-      const duration = 1800;
-      const start = 0;
-      const startTime = performance.now();
-
-      function updateCounter(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const ease = 1 - (1 - progress) * (1 - progress);
-        const currentVal = start + (target - start) * ease;
-
-        if (isCurrency) {
-          el.textContent = 'EGP ' + currentVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        } else if (isPercent) {
-          el.textContent = currentVal.toFixed(1) + '%';
-        } else {
-          el.textContent = Math.floor(currentVal);
-        }
-
-        if (progress < 1) {
-          requestAnimationFrame(updateCounter);
-        }
-      }
-
-      requestAnimationFrame(updateCounter);
-    });
-  }
-
-  // Trigger counters when scrolled into view
-  const heroStats = document.querySelector('.hero-stats-row');
-  if (heroStats) {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        runCounters();
-        observer.disconnect();
-      }
-    }, { threshold: 0.3 });
-    observer.observe(heroStats);
-  }
-
   // Initial View Setup
   renderView('dashboard');
 });
