@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
+  <!-- Ambient Interactive Particle Web Background -->
+  <canvas id="particleCanvas"></canvas>
 
   <!-- Hero & Brand Header (No navbar) -->
   <header class="hero-section hero-no-nav">
@@ -26,7 +28,7 @@
       
       <!-- Company Brand Centerpiece -->
       <div class="brand-hero-center">
-        <div class="company-logo-wrapper">
+        <div class="company-logo-wrapper tilt-card" data-max-tilt="12">
           <img src="assets/images/logo.png" alt="Flash Software Solutions Logo" class="company-logo-img">
         </div>
         <div class="hero-badge-wrap">
@@ -105,7 +107,7 @@
       </div>
 
       <!-- Showcase Display Box -->
-      <div class="showcase-display">
+      <div class="showcase-display tilt-card" data-max-tilt="4">
         <div class="showcase-header">
           <div class="showcase-header-left">
             <span class="showcase-tag" id="showcaseTag">Real-Time BI & Metrics</span>
@@ -113,7 +115,7 @@
             <p class="showcase-subtitle" id="showcaseSubtitle">Real-time visibility into invoicing volumes, tax liabilities, validity rates, and customer distributions.</p>
           </div>
           <div class="showcase-controls">
-            <button class="btn btn-secondary btn-sm" id="btnToggleHotspots" title="Toggle Hotspot Pins">
+            <button class="btn btn-secondary btn-sm" id="btnToggleHotspots" title="Toggle Hotspot Pins (Press A)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -121,7 +123,7 @@
               </svg>
               Toggle Annotations
             </button>
-            <button class="btn btn-primary btn-sm" id="btnExpandLightbox" title="Enlarge Image">
+            <button class="btn btn-primary btn-sm" id="btnExpandLightbox" title="Enlarge Image (Press F)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <polyline points="9 21 3 21 3 15"></polyline>
@@ -133,14 +135,35 @@
           </div>
         </div>
 
-        <!-- Image with interactive hot-spot overlays -->
-        <div class="showcase-image-container">
+        <!-- Image with interactive hot-spot overlays and drag/swipe gestures -->
+        <div class="showcase-image-container" title="Drag or Swipe left/right to change view. Click to inspect.">
           <img src="assets/images/dashboard.png" alt="ETA Invoice Manager - Dashboard" class="showcase-main-img" id="showcaseMainImg">
           <div class="hotspot-overlay" id="hotspotOverlay"></div>
         </div>
 
         <!-- Dynamic feature cards underneath -->
         <div class="showcase-features-grid" id="showcaseFeaturesGrid"></div>
+
+        <!-- Gestures & Motion HUD Bar -->
+        <div class="gesture-hints-row">
+          <span class="gesture-hint-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+            Swipe / Drag screenshot to switch views
+          </span>
+          <span class="gesture-hint-pill">
+            <span class="gesture-key-badge">←</span> <span class="gesture-key-badge">→</span> Switch Views
+          </span>
+          <span class="gesture-hint-pill">
+            <span class="gesture-key-badge">A</span> Annotations
+          </span>
+          <span class="gesture-hint-pill">
+            <span class="gesture-key-badge">F</span> Fullscreen
+          </span>
+          <span class="gesture-hint-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Double-click or Pinch to Zoom
+          </span>
+        </div>
       </div>
     </div>
   </section>
@@ -164,7 +187,7 @@
     </div>
     <div class="lightbox-body">
       <div class="lightbox-img-wrapper">
-        <img src="" alt="" class="lightbox-img" id="lightboxImage">
+        <img src="" alt="" class="lightbox-img" id="lightboxImage" title="Double-click to zoom in/out. Drag to pan.">
       </div>
     </div>
   </div>
@@ -206,6 +229,7 @@
   <!-- Scripts -->
   <script src="js/data.js?v=2"></script>
   <script src="js/lightbox.js?v=2"></script>
+  <script src="js/gestures.js?v=2"></script>
   <script src="js/app.js?v=2"></script>
 </body>
 </html>

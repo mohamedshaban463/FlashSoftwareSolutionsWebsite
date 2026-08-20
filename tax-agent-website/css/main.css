@@ -525,10 +525,164 @@ a:hover {
 .section {
   padding: 90px 0;
   position: relative;
+  z-index: 1;
 }
 
 .section-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, rgba(108, 99, 255, 0.2) 50%, transparent 100%);
   margin: 0;
+  position: relative;
+  z-index: 1;
 }
+
+/* ── Interactive Particle Background Canvas ─────────────────────── */
+#particleCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+.hero-section, .section, .footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 3D Tilt & Specular Shine Layers ────────────────────────────── */
+.tilt-card, .showcase-display, .feature-card, .company-logo-wrapper {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.specular-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 6;
+}
+
+/* ── Interactive Click Ripple Waves ─────────────────────────────── */
+.btn, .social-btn, .showcase-tab-btn, .hotspot-pin, .showcase-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.click-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.45) 0%, rgba(34, 211, 238, 0.25) 50%, transparent 80%);
+  transform: scale(0);
+  animation: rippleAnimation 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+@keyframes rippleAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* ── Floating Logo Levitation Motion ────────────────────────────── */
+.company-logo-wrapper {
+  animation: logoLevitate 6s ease-in-out infinite;
+}
+
+.company-logo-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(108, 99, 255, 0.4) 0%, rgba(34, 211, 238, 0.2) 40%, transparent 75%);
+  z-index: -1;
+  filter: blur(20px);
+  animation: auroraPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes logoLevitate {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+@keyframes auroraPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0.95;
+  }
+}
+
+/* ── Gesture Cue Indicator HUD Badge ────────────────────────────── */
+.gesture-cue-indicator {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translate(-50%, 20px) scale(0.9);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 17, 23, 0.94);
+  border: 1px solid var(--accent-primary);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.85), 0 0 25px rgba(108, 99, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2500;
+}
+
+.gesture-cue-indicator.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.gesture-cue-indicator svg {
+  color: var(--accent-cyan);
+}
+
+/* ── Scroll-Triggered Stagger Reveals ─────────────────────────── */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-item.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+

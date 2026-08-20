@@ -1,36 +1,92 @@
 /**
  * Flash Software Solutions — ETA AI Tax Agent
- * Application Controller for Showcase Image Views, Hotspots, Lightbox & Hero Metrics.
+ * Application Controller for Showcase Image Views, Hotspots, Lightbox & Motions.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Lightbox
-  const lightbox = new Lightbox();
+class AppController {
+  constructor() {
+    this.lightbox = new Lightbox();
+    this.currentViewId = 'dashboard';
+    this.activeHotspotsVisible = true;
+    this.isTransitioning = false;
 
-  // State
-  let currentViewId = 'dashboard';
-  let activeHotspotsVisible = true;
+    // DOM Elements
+    this.tabs = document.querySelectorAll('.showcase-tab-btn');
+    this.viewTag = document.getElementById('showcaseTag');
+    this.viewTitle = document.getElementById('showcaseTitle');
+    this.viewSubtitle = document.getElementById('showcaseSubtitle');
+    this.mainImage = document.getElementById('showcaseMainImg');
+    this.imageContainer = document.querySelector('.showcase-image-container');
+    this.hotspotOverlay = document.getElementById('hotspotOverlay');
+    this.featuresGrid = document.getElementById('showcaseFeaturesGrid');
+    this.btnToggleHotspots = document.getElementById('btnToggleHotspots');
+    this.btnExpandLightbox = document.getElementById('btnExpandLightbox');
 
-  // DOM Elements
-  const tabs = document.querySelectorAll('.showcase-tab-btn');
-  const viewTag = document.getElementById('showcaseTag');
-  const viewTitle = document.getElementById('showcaseTitle');
-  const viewSubtitle = document.getElementById('showcaseSubtitle');
-  const mainImage = document.getElementById('showcaseMainImg');
-  const hotspotOverlay = document.getElementById('hotspotOverlay');
-  const featuresGrid = document.getElementById('showcaseFeaturesGrid');
-  const btnToggleHotspots = document.getElementById('btnToggleHotspots');
-  const btnExpandLightbox = document.getElementById('btnExpandLightbox');
+    this.init();
+  }
 
-  // ── Render Active Showcase View ─────────────────────────────────
-  function renderView(viewId) {
+  init() {
+    // Tab Clicks
+    this.tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetView = tab.dataset.view;
+        if (targetView === this.currentViewId) return;
+
+        const views = ['dashboard', 'invoices', 'submit'];
+        const currentIdx = views.indexOf(this.currentViewId);
+        const targetIdx = views.indexOf(targetView);
+        const direction = targetIdx > currentIdx ? 'right' : 'left';
+
+        this.switchViewWithMotion(targetView, direction);
+      });
+    });
+
+    // Hotspots Toggle
+    this.btnToggleHotspots?.addEventListener('click', () => {
+      this.activeHotspotsVisible = !this.activeHotspotsVisible;
+      this.btnToggleHotspots.classList.toggle('active', this.activeHotspotsVisible);
+      this.renderHotspots(APP_DATA.views[this.currentViewId].hotspots);
+    });
+
+    // Lightbox Expand
+    this.btnExpandLightbox?.addEventListener('click', () => {
+      const current = APP_DATA.views[this.currentViewId];
+      this.lightbox.open(current.image, current.title);
+    });
+
+    // Click on image opens lightbox
+    this.mainImage?.addEventListener('click', () => {
+      const current = APP_DATA.views[this.currentViewId];
+      this.lightbox.open(current.image, current.title);
+    });
+
+    // Dismiss active hotspot on background click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.hotspot-pin')) {
+        document.querySelectorAll('.hotspot-pin').forEach(p => p.classList.remove('active'));
+      }
+    });
+
+    // Initial View Setup
+    this.renderView('dashboard', false);
+
+    // Initialize Gesture & Motion Physics Engine
+    if (window.GestureEngine) {
+      this.gestureEngine = new GestureEngine(this);
+    }
+  }
+
+  // ── Switch View with Directional Slide Motion ───────────────────
+  switchViewWithMotion(viewId, direction = 'right') {
+    if (!APP_DATA.views[viewId] || this.isTransitioning) return;
+    if (viewId === this.currentViewId) return;
+
+    this.isTransitioning = true;
     const viewData = APP_DATA.views[viewId];
-    if (!viewData) return;
+    this.currentViewId = viewId;
 
-    currentViewId = viewId;
-
-    // Update active tab button
-    tabs.forEach(tab => {
+    // Update active tab button with smooth indicator
+    this.tabs.forEach(tab => {
       if (tab.dataset.view === viewId) {
         tab.classList.add('active');
       } else {
@@ -38,36 +94,84 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Update Text & Image
-    if (viewTag) viewTag.textContent = viewData.badge;
-    if (viewTitle) viewTitle.textContent = viewData.title;
-    if (viewSubtitle) viewSubtitle.textContent = viewData.subtitle;
-    if (mainImage) {
-      mainImage.src = viewData.image;
-      mainImage.alt = viewData.title;
+    // Directional transition animation on image frame
+    if (this.imageContainer) {
+      const outClass = direction === 'right' ? 'slide-out-left' : 'slide-out-right';
+      const inClass = direction === 'right' ? 'slide-in-right' : 'slide-in-left';
+
+      this.imageContainer.classList.add(outClass);
+
+      setTimeout(() => {
+        // Swap image and content
+        if (this.viewTag) this.viewTag.textContent = viewData.badge;
+        if (this.viewTitle) this.viewTitle.textContent = viewData.title;
+        if (this.viewSubtitle) this.viewSubtitle.textContent = viewData.subtitle;
+        if (this.mainImage) {
+          this.mainImage.src = viewData.image;
+          this.mainImage.alt = viewData.title;
+        }
+
+        // Render Hotspots & Feature Cards
+        this.renderHotspots(viewData.hotspots);
+        this.renderFeatures(viewData.features);
+
+        this.imageContainer.classList.remove(outClass);
+        this.imageContainer.classList.add(inClass);
+
+        setTimeout(() => {
+          this.imageContainer.classList.remove(inClass);
+          this.isTransitioning = false;
+        }, 350);
+      }, 180);
+    } else {
+      this.renderView(viewId);
+      this.isTransitioning = false;
+    }
+  }
+
+  // ── Standard Render View ────────────────────────────────────────
+  renderView(viewId, animate = true) {
+    const viewData = APP_DATA.views[viewId];
+    if (!viewData) return;
+
+    this.currentViewId = viewId;
+
+    this.tabs.forEach(tab => {
+      if (tab.dataset.view === viewId) {
+        tab.classList.add('active');
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+
+    if (this.viewTag) this.viewTag.textContent = viewData.badge;
+    if (this.viewTitle) this.viewTitle.textContent = viewData.title;
+    if (this.viewSubtitle) this.viewSubtitle.textContent = viewData.subtitle;
+    if (this.mainImage) {
+      this.mainImage.src = viewData.image;
+      this.mainImage.alt = viewData.title;
     }
 
-    // Render Hotspots
-    renderHotspots(viewData.hotspots);
-
-    // Render Feature Cards
-    renderFeatures(viewData.features);
+    this.renderHotspots(viewData.hotspots);
+    this.renderFeatures(viewData.features);
   }
 
   // ── Render Hotspots on Screenshot ──────────────────────────────
-  function renderHotspots(hotspots) {
-    if (!hotspotOverlay) return;
-    hotspotOverlay.innerHTML = '';
-    if (!activeHotspotsVisible || !hotspots) return;
+  renderHotspots(hotspots) {
+    if (!this.hotspotOverlay) return;
+    this.hotspotOverlay.innerHTML = '';
+    if (!this.activeHotspotsVisible || !hotspots) return;
 
-    hotspots.forEach((hs) => {
+    hotspots.forEach((hs, index) => {
       const pin = document.createElement('div');
-      pin.className = 'hotspot-pin';
+      pin.className = 'hotspot-pin hotspot-pop-in';
       pin.style.left = `${hs.x}%`;
       pin.style.top = `${hs.y}%`;
+      pin.style.animationDelay = `${index * 0.08}s`;
       pin.id = hs.id;
 
       pin.innerHTML = `
+        <div class="hotspot-sonar"></div>
         <div class="hotspot-ring"></div>
         <div class="hotspot-core"></div>
         <div class="hotspot-popover">
@@ -83,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      // Allow tap/click to toggle
       pin.addEventListener('click', (e) => {
         e.stopPropagation();
         document.querySelectorAll('.hotspot-pin').forEach(p => {
@@ -92,14 +195,14 @@ document.addEventListener('DOMContentLoaded', () => {
         pin.classList.toggle('active');
       });
 
-      hotspotOverlay.appendChild(pin);
+      this.hotspotOverlay.appendChild(pin);
     });
   }
 
-  // ── Render Feature Cards Below Image ───────────────────────────
-  function renderFeatures(features) {
-    if (!featuresGrid) return;
-    featuresGrid.innerHTML = '';
+  // ── Render Feature Cards with Staggered Cascading Animation ──────
+  renderFeatures(features) {
+    if (!this.featuresGrid) return;
+    this.featuresGrid.innerHTML = '';
     if (!features) return;
 
     const iconSvgs = {
@@ -117,49 +220,26 @@ document.addEventListener('DOMContentLoaded', () => {
       'terminal': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>'
     };
 
-    features.forEach(f => {
+    features.forEach((f, index) => {
       const card = document.createElement('div');
-      card.className = 'feature-card';
+      card.className = 'feature-card tilt-card card-cascade-in';
+      card.style.animationDelay = `${index * 0.07}s`;
       card.innerHTML = `
         <div class="feature-icon-wrap">${iconSvgs[f.icon] || ''}</div>
         <h4 class="feature-title">${f.title}</h4>
         <p class="feature-desc">${f.desc}</p>
       `;
-      featuresGrid.appendChild(card);
+      this.featuresGrid.appendChild(card);
     });
+
+    // Re-bind tilt & magnetic dynamics to new cards
+    if (this.gestureEngine) {
+      this.gestureEngine.init3DTilt();
+    }
   }
+}
 
-  // ── Tab Clicks ──────────────────────────────────────────────────
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      renderView(tab.dataset.view);
-    });
-  });
-
-  // Hotspots Toggle
-  btnToggleHotspots?.addEventListener('click', () => {
-    activeHotspotsVisible = !activeHotspotsVisible;
-    btnToggleHotspots.classList.toggle('active', activeHotspotsVisible);
-    renderHotspots(APP_DATA.views[currentViewId].hotspots);
-  });
-
-  // Lightbox Expand
-  btnExpandLightbox?.addEventListener('click', () => {
-    const current = APP_DATA.views[currentViewId];
-    lightbox.open(current.image, current.title);
-  });
-
-  // Click on image opens lightbox
-  mainImage?.addEventListener('click', () => {
-    const current = APP_DATA.views[currentViewId];
-    lightbox.open(current.image, current.title);
-  });
-
-  // Dismiss active hotspot on background click
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.hotspot-pin').forEach(p => p.classList.remove('active'));
-  });
-
-  // Initial View Setup
-  renderView('dashboard');
+// Instantiate on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  window.appController = new AppController();
 });
